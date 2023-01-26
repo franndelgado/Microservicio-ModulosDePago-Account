@@ -1,5 +1,6 @@
 package com.accenture.modulosPago.service;
 
+import com.accenture.modulosPago.clients.UserClientRest;
 import com.accenture.modulosPago.dtos.AccountDto;
 import com.accenture.modulosPago.entities.Account;
 import com.accenture.modulosPago.models.User;
@@ -7,54 +8,50 @@ import com.accenture.modulosPago.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service("accountServiceRest")
-@Primary
-public class AccountService implements InterfaceAccountService{
+@Service("accountServiceFeign")
+public class AccountServiceFeign implements InterfaceAccountService{
 
     @Autowired
-    private RestTemplate clientRest;
+    private UserClientRest userClientRestFeign;
+
     @Autowired
     private AccountRepository accountRepository;
 
+    @Override
     public Account createdAccount(User user){
-        Account accountNew;
+        Account account;
         do {
-            accountNew = new Account(user);
-            System.out.println(accountNew.getId());
-        } while (accountRepository.findByAccountNumber(accountNew.getAccountNumber()) != null
-                || accountRepository.findByCbu(accountNew.getCbu()) != null);
-        accountRepository.save(accountNew);
-
-        clientRest.postForEntity("http://localhost:8001/api/users/addAccountUser/",accountNew,Account.class);
-
-        return accountNew;
+            account = new Account(user);
+        } while (accountRepository.findByAccountNumber(account.getAccountNumber()) != null
+                || accountRepository.findByCbu(account.getCbu()) != null);
+        return accountRepository.save(account);
     }
 
 
-    @Transactional(readOnly = true)
+    @Override
     public List<Account> findAll() {
-        return (List<Account>) accountRepository.findAll();
+        return accountRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Override
     public Account findById(Long id) {
         return accountRepository.findById(id).orElse(null);
     }
 
-    @Transactional(readOnly = true)
-    public Account LastCreatedAccount(Long idUser){
+    @Override
+    public Account LastCreatedAccount(Long idUser) {
         return accountRepository.findAllByIdUserOrderByIdDesc(idUser)
                 .stream().findFirst()
                 .orElse(null);
     }
 
     @Override
-    public Account findByAccountNumber(String accountNumber){
+    public Account findByAccountNumber(String accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber);
     }
 
@@ -67,6 +64,13 @@ public class AccountService implements InterfaceAccountService{
     public List<Account> findByIdUser(Long idUser) {
         return accountRepository.findByIdUser(idUser);
     }
-
-
 }
+
+
+ /*
+        List<Account> listAccount = new ArrayList<>();
+        List<User> listUsers = userClientRestFeign.findAll().stream().collect(Collectors.toList());
+        for (int i = 0; i < listUsers.size(); i++) {
+            listAccount.addAll(accountRepository.findAllByIdUser(listUsers.get(i).getIdAccount()));
+        }
+        return listAccount;*/

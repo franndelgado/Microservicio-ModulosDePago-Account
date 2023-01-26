@@ -1,43 +1,27 @@
-package com.accenture.modulosPago.models;
+package com.accenture.modulosPago.dtos;
 
+import com.accenture.modulosPago.entities.Account;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@Entity
-public class Account {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO,generator = "native")
-    @GenericGenerator(name ="native",strategy = "native")
-    private Long id;
+public class AccountDto {
     private String cbu;
     private BigDecimal balance;
     private String accountNumber;
-    private LocalDateTime creationDate;
+    private LocalDate creationDate;
 
-    public Account() {
+    public AccountDto(Account account) {
+        this.cbu = account.getCbu();
+        this.balance = account.getBalance();
+        this.accountNumber = account.getAccountNumber();
+        this.creationDate = account.getCreationDate();
     }
 
-    public Account(String cbu, BigDecimal balance, String accountNumber, LocalDateTime creationDate ){
-        this.cbu = cbu;
-        this.balance = balance;
-        this.accountNumber = accountNumber;
-        this.creationDate = creationDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getCbu() {
         return cbu;
@@ -63,11 +47,11 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public LocalDateTime getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 }
