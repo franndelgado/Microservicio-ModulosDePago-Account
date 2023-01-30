@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utils.Utils;
 
+import javax.management.ObjectName;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class AccountController {
         return new ResponseEntity<>(account, HttpStatus.ACCEPTED);
     }
 
-    @PostMapping ("/createdAccount")
+    @PostMapping("/createdAccount")
     public ResponseEntity<Object> createdAccount(@RequestBody User user){
         try{
             Account accNew = interfaceAccountService.createdAccount(user);
@@ -81,4 +82,17 @@ public class AccountController {
             return new ResponseEntity<>("Unexpected Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @DeleteMapping("/remove/{idAccount}")
+    public ResponseEntity<Object> removeAccount(@PathVariable Long idAccount){
+
+        if(interfaceAccountService.deleteByIdAccount(idAccount)){
+            return new ResponseEntity<>("Account deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Account no exist", HttpStatus.NOT_ACCEPTABLE);
+    }
+
+
 }
+

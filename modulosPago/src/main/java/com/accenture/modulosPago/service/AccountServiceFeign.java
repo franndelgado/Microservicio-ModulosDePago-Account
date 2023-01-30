@@ -8,9 +8,11 @@ import com.accenture.modulosPago.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("accountServiceFeign")
@@ -63,6 +65,17 @@ public class AccountServiceFeign implements InterfaceAccountService{
     @Override
     public List<Account> findByIdUser(Long idUser) {
         return accountRepository.findByIdUser(idUser);
+    }
+
+    @Override
+    public Boolean deleteByIdAccount(Long idAccount) {
+        Optional<Account> acc = accountRepository.findById(idAccount);
+        if(acc.isPresent() && Utils.verifyBalanceAccount(acc.get())){
+            accountRepository.delete(acc.get());
+            return true;
+        }else{
+            return false;
+        }
     }
 }
 

@@ -21,4 +21,7 @@ public interface InterfaceAccountService {
     public  Account findByCbu(String cbu);
 
     public  List<Account> findByIdUser(Long idUser);
+
+    public Boolean deleteByIdAccount(Long idAccount);
+
 }

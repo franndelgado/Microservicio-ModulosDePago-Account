@@ -9,8 +9,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import utils.Utils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("accountServiceRest")
 @Primary
@@ -34,7 +36,6 @@ public class AccountService implements InterfaceAccountService{
 
         return accountNew;
     }
-
 
     @Transactional(readOnly = true)
     public List<Account> findAll() {
@@ -68,5 +69,15 @@ public class AccountService implements InterfaceAccountService{
         return accountRepository.findByIdUser(idUser);
     }
 
+    @Override
+    public Boolean deleteByIdAccount(Long idAccount) {
+        Optional<Account> acc = accountRepository.findById(idAccount);
+        if(acc.isPresent() && Utils.verifyBalanceAccount(acc.get())){
+            accountRepository.delete(acc.get());
 
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
