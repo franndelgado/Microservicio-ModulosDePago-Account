@@ -25,9 +25,11 @@ public class Account {
     private String accountNumber;
     private LocalDate creationDate;
     private Long idUser;
+    private Boolean status;
 
     @Transient
     private User user;
+
     public Account() {
     }
 
@@ -71,6 +73,7 @@ public class Account {
         this.creationDate = LocalDate.now();
         this.user = user;
         this.idUser = user.getId();
+        this.status = true;
     }
 
     public Long getId() {
@@ -121,5 +124,11 @@ public class Account {
         this.user = user;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
 
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 }

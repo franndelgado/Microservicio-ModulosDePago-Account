@@ -24,4 +24,7 @@ public interface InterfaceAccountService {
 
     public Boolean deleteByIdAccount(Long idAccount);
 
+    public List<Account> findAccounts(Long idUser);
+
+    public Long findLastUserWithAccount(Long idUser);
 }

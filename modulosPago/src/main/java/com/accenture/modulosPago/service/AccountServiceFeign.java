@@ -34,7 +34,6 @@ public class AccountServiceFeign implements InterfaceAccountService{
         return accountRepository.save(account);
     }
 
-
     @Override
     public List<Account> findAll() {
         return accountRepository.findAll();
@@ -77,11 +76,24 @@ public class AccountServiceFeign implements InterfaceAccountService{
             return false;
         }
     }
+
+    @Override
+    public List<Account> findAccounts(Long idUser) {
+        return accountRepository.findByIdUserAndStatus(idUser, true);
+    }
+
+    @Override
+    public Long findLastUserWithAccount(Long idUser){
+        User userAux = userClientRestFeign.detail(idUser);
+        if(userAux != null){
+            return userAux.getId();
+        }else{
+            return 0L;
+        }
+    }
 }
-
-
  /*
-        List<Account> listAccount = new ArrayList<>();
+      List<Account> listAccount = new ArrayList<>();
         List<User> listUsers = userClientRestFeign.findAll().stream().collect(Collectors.toList());
         for (int i = 0; i < listUsers.size(); i++) {
             listAccount.addAll(accountRepository.findAllByIdUser(listUsers.get(i).getIdAccount()));

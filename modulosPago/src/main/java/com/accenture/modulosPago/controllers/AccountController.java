@@ -12,12 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utils.Utils;
-
-import javax.management.ObjectName;
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
@@ -29,6 +24,12 @@ public class AccountController {
     @GetMapping("/list")
     public List<Account> getListAccounts(){
         return interfaceAccountService.findAll();
+    }
+
+    @GetMapping("/list/{idUser}")
+    public List<Account> getListActiveAccounts(@PathVariable Long idUser){
+        System.out.println(interfaceAccountService.findAccounts(idUser));
+        return interfaceAccountService.findAccounts(idUser);
     }
 
     @GetMapping("/detail/{id}")
@@ -71,18 +72,33 @@ public class AccountController {
         return new ResponseEntity<>(account, HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/createdAccount")
+    @PostMapping ("/createdAccount")
     public ResponseEntity<Object> createdAccount(@RequestBody User user){
         try{
-            Account accNew = interfaceAccountService.createdAccount(user);
-            return  new ResponseEntity<>(accNew, HttpStatus.CREATED);
-        }catch(Exception ex){
+            int dniLength = user.getDni().length();
+            if (!(dniLength > 6 && dniLength < 9)) {
+                return new ResponseEntity<>("The length of DNI is not correct", HttpStatus.NOT_ACCEPTABLE);
+            }
+            if (!Utils.verifyNumber(user.getDni())) {
+                return new ResponseEntity<>("Error, DNI only accept numbers", HttpStatus.NOT_ACCEPTABLE);
+            }
+            if (user.getName().trim().isEmpty() || user.getLastName().trim().isEmpty() || user.getDni().trim().isEmpty()
+                    || user.getMail().trim().isEmpty() || user.getPassword().trim().isEmpty()) {
+                return new ResponseEntity<>("Missing data, please check all fields", HttpStatus.NOT_ACCEPTABLE);
+            }
+            if(!interfaceAccountService.findAll().isEmpty()){
+                if(interfaceAccountService.findLastUserWithAccount(user.getId()) == 0L){
+                    return new ResponseEntity<>("This user no exist, check data", HttpStatus.NOT_ACCEPTABLE);
+                }
+            }
+            Account accountNew = interfaceAccountService.createdAccount(user);
+            return new ResponseEntity<>(accountNew, HttpStatus.CREATED);
+        } catch (Exception ex){
             ex.printStackTrace();
             ex.getMessage();
             return new ResponseEntity<>("Unexpected Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @DeleteMapping("/remove/{idAccount}")
     public ResponseEntity<Object> removeAccount(@PathVariable Long idAccount){
@@ -92,7 +108,6 @@ public class AccountController {
         }
         return new ResponseEntity<>("Account no exist", HttpStatus.NOT_ACCEPTABLE);
     }
-
 
 }
 

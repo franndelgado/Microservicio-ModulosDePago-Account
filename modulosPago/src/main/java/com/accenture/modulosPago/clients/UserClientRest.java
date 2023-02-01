@@ -23,4 +23,6 @@ public interface UserClientRest {
     @PostMapping("api/user/addAccountUser")
     public ResponseEntity<Object> addAccountUser(@RequestBody Account account);
 
+    @GetMapping("/api/users/detail/{id}")
+    public User detail(@PathVariable Long id);
 }

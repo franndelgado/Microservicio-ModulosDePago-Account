@@ -18,5 +18,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByCbu(String cbu);
 
     Optional<Account> findById(Long id);
-    //Optional<Account>
+    List<Account> findByIdUserAndStatus(Long idUser, Boolean status);
+
+    Optional<Account> findByIdUserOrderByIdUserDesc(Long idUser);
 }
