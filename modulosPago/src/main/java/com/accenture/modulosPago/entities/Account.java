@@ -19,7 +19,6 @@ public class Account {
 
     @Column(unique = true)
     private String cbu;
-
     private BigDecimal balance;
     @Column(unique = true)
     private String accountNumber;
@@ -55,8 +54,6 @@ public class Account {
         this.creationDate = accountDto.getCreationDate();
         this.user = user;
     }
-
-
 
     public Long getIdUser() {
         return idUser;

@@ -1,5 +1,6 @@
 package com.accenture.modulosPago.service;
 
+import com.accenture.modulosPago.dtos.TransactionDto;
 import com.accenture.modulosPago.entities.Account;
 import com.accenture.modulosPago.models.User;
 
@@ -27,4 +28,6 @@ public interface InterfaceAccountService {
     public List<Account> findAccounts(Long idUser);
 
     public Long findLastUserWithAccount(Long idUser);
+
+    public Boolean updatedBalance(TransactionDto transactionDto);
 }

@@ -1,6 +1,7 @@
 package com.accenture.modulosPago.controllers;
 
 import com.accenture.modulosPago.dtos.AccountDto;
+import com.accenture.modulosPago.dtos.TransactionDto;
 import com.accenture.modulosPago.entities.Account;
 import com.accenture.modulosPago.models.User;
 import com.accenture.modulosPago.repositories.AccountRepository;
@@ -59,7 +60,6 @@ public class AccountController {
         return new ResponseEntity<>(account, HttpStatus.ACCEPTED);
     }
 
-
     @GetMapping("/list/number/{number}")
     public ResponseEntity<Object> getByNumberAccount(@PathVariable String number) {
         if (number.length() != 10) {
@@ -109,5 +109,23 @@ public class AccountController {
         return new ResponseEntity<>("Account no exist", HttpStatus.NOT_ACCEPTABLE);
     }
 
+
+    @PostMapping("/updateBalance")
+    public void updatedBalance(@RequestBody TransactionDto transactionDto){
+        interfaceAccountService.updatedBalance(transactionDto);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

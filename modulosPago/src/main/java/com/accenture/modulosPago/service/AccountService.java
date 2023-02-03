@@ -1,9 +1,11 @@
 package com.accenture.modulosPago.service;
 
 import com.accenture.modulosPago.dtos.AccountDto;
+import com.accenture.modulosPago.dtos.TransactionDto;
 import com.accenture.modulosPago.entities.Account;
 import com.accenture.modulosPago.models.User;
 import com.accenture.modulosPago.repositories.AccountRepository;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import utils.Utils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,5 +101,21 @@ public class AccountService implements InterfaceAccountService{
         }
     }
 
+    @Override
+    public Boolean updatedBalance(TransactionDto transactionDto){
+        try {
+            Account accountOrigin = accountRepository.findByAccountNumber(transactionDto.getAccountNumberOrigin());
+            Account accountDestination = accountRepository.findByAccountNumber(transactionDto.getAccountNumberDestination());
+            accountOrigin.setBalance(accountOrigin.getBalance().subtract(BigDecimal.valueOf(transactionDto.getAmount())));
+            accountDestination.setBalance(accountDestination.getBalance().add(BigDecimal.valueOf(transactionDto.getAmount())));
+            accountRepository.save(accountOrigin);
+            accountRepository.save(accountDestination);
+            return true;
+        }
+        catch (Exception ex){
+            ex.getMessage();
+            return false;
+        }
+    }
 }
 //clientRest.postForEntity("http://localhost:8002/api/user/deleteAccountToListUser/",acc,Account.class);

@@ -2,6 +2,7 @@ package com.accenture.modulosPago.service;
 
 import com.accenture.modulosPago.clients.UserClientRest;
 import com.accenture.modulosPago.dtos.AccountDto;
+import com.accenture.modulosPago.dtos.TransactionDto;
 import com.accenture.modulosPago.entities.Account;
 import com.accenture.modulosPago.models.User;
 import com.accenture.modulosPago.repositories.AccountRepository;
@@ -90,6 +91,11 @@ public class AccountServiceFeign implements InterfaceAccountService{
         }else{
             return 0L;
         }
+    }
+
+    @Override
+    public Boolean updatedBalance(TransactionDto transactionDto) {
+        return null;
     }
 }
  /*
