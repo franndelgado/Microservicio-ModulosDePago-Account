@@ -7,13 +7,15 @@ import java.time.LocalDateTime;
 public class TransactionDto {
 
     private Double amount;
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime transactionDate;
+
+    private String transactionDate;
     private String beneficiary;
     private String accountNumberOrigin; //sender
     private String accountNumberDestination;
     private String description;
 
+    public TransactionDto() {
+    }
 
     public Double getAmount() {
         return amount;
@@ -23,11 +25,11 @@ public class TransactionDto {
         this.amount = amount;
     }
 
-    public LocalDateTime getTransactionDate() {
+    public String getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(LocalDateTime transactionDate) {
+    public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
 
